@@ -1,11 +1,12 @@
 import {NextRequest, NextResponse} from "next/server";
 import {createZipFile, ZipFile} from "@/app/lib/zip";
+import {API_URL} from "@/app/lib/env";
 
 export async function GET(req: NextRequest, res: NextResponse) {
     const urls = (req.nextUrl.searchParams.get('urls') ?? '').split(',').filter(s => s.length > 0);
     const files: ZipFile[] = []
     for(let url of urls){
-        const apiRes = await fetch('http://localhost:8000/info/download?url=' + url);
+        const apiRes = await fetch(`${API_URL}/info/download?url=${url}`);
         const receive = await apiRes.blob();
         files.push({
             name: sanitizeFilename(url),

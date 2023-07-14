@@ -2,6 +2,7 @@
 
 import {NextRequest, NextResponse} from "next/server";
 import {download, getInfo} from "@/app/lib/ytdl";
+import {API_URL} from "@/app/lib/env";
 
 export interface VideoInformation{
     url: string,
@@ -16,7 +17,7 @@ export async function GET(req: NextRequest){
     const playlist = req.nextUrl.searchParams.get('playlist');
     if(!url) return NextResponse.json(undefined);
 
-    const res = await fetch(`http://localhost:8000/info?url=${url}&playlist=${playlist}`, {
+    const res = await fetch(`${API_URL}/info?url=${url}&playlist=${playlist}`, {
         method: 'GET',
     })
 
