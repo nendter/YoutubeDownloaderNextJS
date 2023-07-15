@@ -1,10 +1,21 @@
 import {NextRequest, NextResponse} from "next/server";
 import {createZipFile, ZipFile} from "@/app/lib/zip";
 import {API_URL} from "@/app/lib/env";
+import {NextApiResponse} from "next";
+import {progresses} from "@/app/lib/progress";
 
 export async function GET(req: NextRequest, res: NextResponse) {
     const urls = (req.nextUrl.searchParams.get('urls') ?? '').split(',').filter(s => s.length > 0);
     const files: ZipFile[] = []
+
+    const progress_id = req.nextUrl.searchParams.get('id');
+    if(progress_id){
+        progresses.set(progress_id, {
+            current: 0,
+            all: urls.length
+        })
+    }
+
     for(let url of urls){
         const apiRes = await fetch(`${API_URL}/info/download?url=${url}`);
         const receive = await apiRes.blob();
@@ -12,6 +23,10 @@ export async function GET(req: NextRequest, res: NextResponse) {
             name: sanitizeFilename(url),
             blob: receive
         });
+
+        if(progress_id){
+            progresses.get(progress_id)!.current++;
+        }
     }
     const zip = await createZipFile(files)
     return new NextResponse(zip, {
