@@ -1,8 +1,5 @@
 import JSZip from "jszip";
 
-const fs = require('fs');
-const archiver = require('archiver');
-
 export interface ZipFile{
     name: string,
     blob: Blob
