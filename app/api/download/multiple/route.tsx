@@ -3,6 +3,8 @@ import {createZipFile, ZipFile} from "@/app/lib/zip";
 import {API_URL} from "@/app/lib/env";
 import {NextApiResponse} from "next";
 import {progresses} from "@/app/lib/progress";
+import {Simulate} from "react-dom/test-utils";
+import progress = Simulate.progress;
 
 export async function GET(req: NextRequest, res: NextResponse) {
     const urls = (req.nextUrl.searchParams.get('urls') ?? '').split(',').filter(s => s.length > 0);
@@ -12,6 +14,10 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
     const progress_id = req.nextUrl.searchParams.get('id');
     if(progress_id){
+        if(progresses.get(progress_id)){
+            console.log('DUPLICATE REQUEST')
+            return NextResponse.json('Duplicate Request')
+        }
         progresses.set(progress_id, {
             current: 0,
             all: urls.length
@@ -37,6 +43,11 @@ export async function GET(req: NextRequest, res: NextResponse) {
         }
     }
     const zip = await createZipFile(files)
+
+    if(progress_id){
+        progresses.delete(progress_id)
+    }
+
     return new NextResponse(zip, {
         headers: {
             'Content-Disposition': 'attachment; filename="songs.zip"'
