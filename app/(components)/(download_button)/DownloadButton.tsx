@@ -26,25 +26,9 @@ export function DownloadButton(){
 
         const items: VideoInformation[] = JSON.parse(itemsContext.items);
         if(items.length == 0) return;
-        console.log('SEND ANOTHER MULTPLE REQUEST TO SERVER')
         const res = await fetch(`/api/download/multiple?urls=${items.map(i => i.url + ',')}&id=${localProgressId}`, {
             method: 'GET',
         })
-        const fileBlob = await res.blob();
-        const url = URL.createObjectURL(fileBlob);
-
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'songs.zip');
-
-        document.body.appendChild(link);
-        link.click();
-
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url)
-
-        setLoading(false)
-        setProgressId('')
     }
 
 
@@ -62,6 +46,26 @@ export function DownloadButton(){
                     setTimeout(() => {
                         getProgress()
                     }, 5000)
+                }else{
+                    fetch(`/api/download/multiple/collect?id=${localProgressId}`, {
+                        method: 'GET'
+                    }).then(async (res) => {
+                        const fileBlob = await res.blob();
+                        const url = URL.createObjectURL(fileBlob);
+
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', 'songs.zip');
+
+                        document.body.appendChild(link);
+                        link.click();
+
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url)
+
+                        setLoading(false)
+                        setProgressId('')
+                    })
                 }
             })
         }
