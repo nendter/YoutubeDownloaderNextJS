@@ -16,16 +16,22 @@ export async function GET(req: NextRequest, res: NextResponse) {
         })
     }
 
+    let current = 0
     for(let url of urls){
+        if(progress_id) {
+            console.log(progresses.get(progress_id))
+        }
+
         const apiRes = await fetch(`${API_URL}/info/download?url=${url}`);
         const receive = await apiRes.blob();
         files.push({
             name: sanitizeFilename(url),
             blob: receive
         });
+        current++;
 
         if(progress_id){
-            progresses.get(progress_id)!.current++;
+            progresses.get(progress_id)!.current = current;
         }
     }
     const zip = await createZipFile(files)

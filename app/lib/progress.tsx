@@ -1,4 +1,3 @@
-
 export interface Progress{
     current: number
     all: number
