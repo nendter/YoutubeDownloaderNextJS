@@ -1,5 +1,5 @@
 import {NextRequest, NextResponse} from "next/server";
-import {cache, progresses} from "@/app/lib/progress";
+import {progresses} from "@/app/lib/progress";
 import {createZipFile} from "@/app/lib/zip";
 
 export async function GET(req: NextRequest){

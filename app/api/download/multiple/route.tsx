@@ -2,7 +2,7 @@ import {NextRequest, NextResponse} from "next/server";
 import {createZipFile, ZipFile} from "@/app/lib/zip";
 import {API_URL} from "@/app/lib/env";
 import {NextApiResponse} from "next";
-import {cache, progresses} from "@/app/lib/progress";
+import {progresses} from "@/app/lib/progress";
 import {Simulate} from "react-dom/test-utils";
 import progress = Simulate.progress;
 import {download} from "@/app/lib/ytdl";
