@@ -8,6 +8,8 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const urls = (req.nextUrl.searchParams.get('urls') ?? '').split(',').filter(s => s.length > 0);
     const files: ZipFile[] = []
 
+    console.log('GET MULTIPLE START')
+
     const progress_id = req.nextUrl.searchParams.get('id');
     if(progress_id){
         progresses.set(progress_id, {
