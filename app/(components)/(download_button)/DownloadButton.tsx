@@ -26,6 +26,7 @@ export function DownloadButton(){
 
         const items: VideoInformation[] = JSON.parse(itemsContext.items);
         if(items.length == 0) return;
+        console.log('SEND ANOTHER MULTPLE REQUEST TO SERVER')
         const res = await fetch(`/api/download/multiple?urls=${items.map(i => i.url + ',')}&id=${localProgressId}`, {
             method: 'GET',
         })
